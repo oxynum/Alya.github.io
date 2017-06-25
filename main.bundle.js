@@ -3,7 +3,7 @@ webpackJsonp([2,4],{
 /***/ 135:
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"wrap\" >\n  <div class=\"alya-animation\" [ngClass]=\"{'accelerateEffect': move, 'stayLeft': stayLeft}\">\n  </div>\n  <p class=\"textSplah\">{{textToSplash}}</p> \n  <ul class=\"answers\" [ngClass]=\"{'hide': hideAnswers}\">\n    <li class=\"advise-card \"> <a href=\"https://www.produitsdebourse.bnpparibas.fr/produits/details/cac-40-turbo-call-infini/frbnpp00cvm8\">Turbo Call Infini CAC 40</a></li>\n    <li class=\"advise-card \"> <a href=\"https://www.produitsdebourse.bnpparibas.fr/produits/details/cac-40-warrant-call/nl0012300859\">WARRANT CALL CAC 40</a></li>\n  </ul>\n\n  <ul class=\"answers\" [ngClass]=\"{'hide': hideAnswers2}\">\n    <li class=\"advise-card highLight\"> <a href=\"https://mabanque.bnpparibas/rsc/contrib/document/docs/conditions-generales/cartes/Conditions-de-fonctionnement-livret-jeune-A-weezbee.pdf\">PDF:  Cartes Épargne bnp paribas</a></li>\n    <li class=\"advise-card \"> <a href=\"https://www.produitsdebourse.bnpparibas.fr/produits/details/cac-40-warrant-call/nl0012300859\">le plafond chez bnp paribas</a></li>\n    <li class=\"advise-card \"> <a href=\"https://www.produitsdebourse.bnpparibas.fr/produits/details/cac-40-warrant-call/nl0012300859\">Les comptes jeunes</a></li>\n  </ul>\n</div>\n\n<!--<button type=\"1\" (click)=\"changeText1()\">Listen</button><button type=\"2\" (click)=\"changeText3()\">Quiet</button><button type=\"3\" (click)=\"changeText2()\">derniers produits</button><button type=\"3\" (click)=\"changeText4()\">Mme Michu</button><button type=\"3\" (click)=\"present()\">Presente toi</button><button type=\"3\" (click)=\"hello()\">Bonjour</button>-->\n"
+module.exports = "<div class=\"wrap\" (click)=\"changeText(textToSplash)\">\n  <div class=\"alya-animation\" [ngClass]=\"{'accelerateEffect': move, 'stayLeft': stayLeft}\">\n  </div>\n  <p class=\"textSplah\">{{textToSplash}}</p> \n  <ul class=\"answers\" [ngClass]=\"{'hide': hideAnswers}\">\n    <li class=\"advise-card \"> <a href=\"https://www.produitsdebourse.bnpparibas.fr/produits/details/cac-40-turbo-call-infini/frbnpp00cvm8\">Turbo Call Infini CAC 40</a></li>\n    <li class=\"advise-card \"> <a href=\"https://www.produitsdebourse.bnpparibas.fr/produits/details/cac-40-warrant-call/nl0012300859\">WARRANT CALL CAC 40</a></li>\n  </ul>\n\n  <ul class=\"answers\" [ngClass]=\"{'hide': hideAnswers2}\">\n    <li class=\"advise-card highLight\"> <a href=\"https://mabanque.bnpparibas/rsc/contrib/document/docs/conditions-generales/cartes/Conditions-de-fonctionnement-livret-jeune-A-weezbee.pdf\">PDF:  Cartes Épargne bnp paribas</a></li>\n    <li class=\"advise-card \"> <a href=\"https://www.produitsdebourse.bnpparibas.fr/produits/details/cac-40-warrant-call/nl0012300859\">le plafond chez bnp paribas</a></li>\n    <li class=\"advise-card \"> <a href=\"https://www.produitsdebourse.bnpparibas.fr/produits/details/cac-40-warrant-call/nl0012300859\">Les comptes jeunes</a></li>\n  </ul>\n</div>\n\n<!--<button type=\"1\" (click)=\"changeText1()\">Listen</button><button type=\"2\" (click)=\"changeText3()\">Quiet</button><button type=\"3\" (click)=\"changeText2()\">derniers produits</button><button type=\"3\" (click)=\"changeText4()\">Mme Michu</button><button type=\"3\" (click)=\"present()\">Presente toi</button><button type=\"3\" (click)=\"hello()\">Bonjour</button>-->\n"
 
 /***/ }),
 
@@ -79,23 +79,56 @@ var AppComponent = (function () {
         this.stayLeft = false;
         this.hideAnswers = true;
         this.hideAnswers2 = true;
+        this.init = {
+            lang: 'fr-FR',
+            soundex: true,
+            continuous: true,
+            debug: false,
+            listen: true // Start listening when this function is triggered
+        };
         this.artyom.addCommands({
-            indexes: ["Présente toi", "Qui es-tu ?", "Peux-tu te présenter ?"],
+            indexes: ["* présente toi", "Qui es-tu ?", "Peux-tu te présenter ?"],
             action: function (i) {
-                //this.artyom.say('Je suis Alya, ton assistante personnelle. Ensemble nous sommes comme Batman et Robine.');
-                _this.artyom.say('Je m\'appel Alya, ton assistante personnelle.');
+                _this.artyom.say('Je mappel Alya, ton assistante personnelle.');
+            }
+        });
+        // http://www.marmiton.org/recettes/recherche.aspx?s=tartiflette&type=all
+        this.artyom.addCommands({
+            indexes: ["Je voudrais manger * ", "J'aimerais manger *"],
+            action: function (i) {
+                _this.artyom.say('Très bien, je vous donne ce que j\'ai trouvé sur la tartiflette, depuis ma base de connaissance.');
+                _this.artyom.say('Je vous fais parvenir la liste des ingrédients sur votre smartphone.');
+                _this.artyom.say('Je constate que le casino le plus proche ferme dans moins de 30 minutes.', { onEnd: function () {
+                        _this.artyom.say('Rudy, souhaitez-vous que j\'ajoute le Chardonnay à votre liste de courses ?');
+                        _this.artyom.addCommands({
+                            indexes: ["Oui", "Non"],
+                            action: function (i) {
+                                if (i == 0) {
+                                    _this.artyom.say('Très bien, le Chardonnay a été ajouté à votre liste de courses.', {
+                                        onEnd: function () {
+                                            _this.artyom.clearGarbageCollection();
+                                        }
+                                    });
+                                }
+                                else {
+                                    _this.artyom.say('D\'accord.', {
+                                        onEnd: function () {
+                                            _this.artyom.clearGarbageCollection();
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                    } });
+                window.open("http://www.marmiton.org/recettes/recette_tartiflette-facile_15733.aspx", "_blank");
             }
         });
         this.artyom.addCommands({
             indexes: ["As-tu une blague ?"],
             action: function (i) {
-                _this.artyom.say('Combien font 0 + 0 ? La tête à Toto. LOL.');
-            }
-        });
-        this.artyom.addCommands({
-            indexes: ["Quels sont * plafond", "plafond *", "* compte jeune", "plafond"],
-            action: function (i) {
-                _this.artyom.say("Parmis les trois ressources documentées, la plus pertinente se trouve dans le document suivant.");
+                _this.artyom.say('A quoi sert internet Explorer ?');
+                _this.artyom.say('A télécharger google chrome.');
+                _this.artyom.say('LOL');
             }
         });
         this.artyom.addCommands({
@@ -115,22 +148,18 @@ var AppComponent = (function () {
         });
         // Thanks
         this.artyom.addCommands({
-            indexes: ["Merci beaucoup", "Merci"],
+            indexes: ["Merci à tous", "Merci"],
             action: function (i) {
-                _this.artyom.say("Tout le plaisir est pour moi.");
+                if (i == 0) {
+                    _this.artyom.say("Merci à vous, et maintenant, allons nourir le monde de diversité.");
+                }
+                else {
+                    _this.artyom.say("Tout le plaisir est pour moi.");
+                }
             }
         });
     }
     AppComponent.prototype.ngAfterViewInit = function () {
-        var _this = this;
-        this.artyom.addCommands({
-            indexes: ["Ouvre BNP dans un nouvel onglet", "immobilier * BNP", "banque", "immobilier", "crédit", "placement"],
-            action: function (i, wildcard) {
-                _this.artyom.say("Je vous donne accès, au site, n'hésiter pas à me solliciter si vous avez besoin d'une assistance.");
-                console.log('ooo');
-                window.open("https://mabanque.bnpparibas/", "_blank");
-            }
-        });
         this.artyom.initialize({
             lang: 'fr-FR',
             soundex: true,
